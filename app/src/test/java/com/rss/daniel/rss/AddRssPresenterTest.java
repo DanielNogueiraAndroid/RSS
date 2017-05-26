@@ -6,11 +6,11 @@ import com.rss.daniel.rss.addrss.AddRssPresenter;
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssRepository;
 import com.rss.daniel.rss.util.BaseSchedulerProvider;
+import com.rss.daniel.rss.util.ImmediateSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
@@ -18,9 +18,7 @@ import java.util.List;
 
 import rx.Observable;
 
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +36,6 @@ public class AddRssPresenterTest {
     @Mock
     private RssRepository mRssRepository;
 
-    @Mock
     private BaseSchedulerProvider mSchedulerProvider;
 
     @Mock
@@ -48,9 +45,10 @@ public class AddRssPresenterTest {
     private AddRssContract.View mAddRssView;
 
     @Before
-    public void init(){
+    public void init() {
         MockitoAnnotations.initMocks(this);
-        RSS_URLS = Arrays.asList(new RssUrl("http1"),new RssUrl("http2"),new RssUrl("http3"));
+        mSchedulerProvider = new ImmediateSchedulerProvider();
+        RSS_URLS = Arrays.asList(new RssUrl("http1"), new RssUrl("http2"), new RssUrl("http3"));
     }
 
     @Test
@@ -60,7 +58,7 @@ public class AddRssPresenterTest {
     }
 
     @Test
-    public void AddRssUrl(){
+    public void AddRssUrl() {
         String url = "url";
         mAddRssPresenter = new AddRssPresenter(mRssRepository, mAddRssView, mSchedulerProvider);
         mAddRssPresenter.addRssUrl(url);
@@ -68,8 +66,7 @@ public class AddRssPresenterTest {
     }
 
     @Test
-    public void loadRssUrlProgressOn(){
-        String url = "url";
+    public void loadRssUrlProgressOn() {
         mAddRssPresenter = new AddRssPresenter(mRssRepository, mAddRssView, mSchedulerProvider);
         when(mRssRepository.getRssUrls()).thenReturn(Observable.just(RSS_URLS));
 
@@ -78,12 +75,10 @@ public class AddRssPresenterTest {
     }
 
     @Test
-    public void loadRssUrltoView(){
-        String url = "url";
+    public void loadRssUrltoView() {
         mAddRssPresenter = new AddRssPresenter(mRssRepository, mAddRssView, mSchedulerProvider);
         when(mRssRepository.getRssUrls()).thenReturn(Observable.just(RSS_URLS));
         mAddRssPresenter.loadRssUrls();
-        verify(mAddRssView).setLoadingIndicator(true);
         verify(mAddRssView).showRssUrls(RSS_URLS);
     }
 
