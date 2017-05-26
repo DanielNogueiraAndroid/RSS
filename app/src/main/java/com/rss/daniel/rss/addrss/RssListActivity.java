@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.rss.daniel.rss.R;
 import com.rss.daniel.rss.data.RssUrl;
@@ -22,6 +24,8 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         NavigationView.OnNavigationItemSelectedListener {
 
     AddRssContract.Presenter mAddRssPresenter;
+    private ListView mDrawerList;
+    private String[] mPlanetTitles; // TODO  remove
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         setContentView(R.layout.activity_rsslist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,13 +45,17 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mPlanetTitles));
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+/*        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);*/
     }
 
     @Override
