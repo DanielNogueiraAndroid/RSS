@@ -42,7 +42,6 @@ public class AddRssPresenter implements AddRssContract.Presenter {
     @Override
     public void loadRssUrls() {
         mAddRssView.setLoadingIndicator(true);
-        mRssRepository.getRssUrls();
         mSubscriptions.clear();
         rx.Subscription subscription = mRssRepository
                 .getRssUrls()
@@ -63,9 +62,9 @@ public class AddRssPresenter implements AddRssContract.Presenter {
     }
 
     private void processRssUrl(List<RssUrl> rssUrls) {
-        if(rssUrls.isEmpty()){
+        if (rssUrls.isEmpty()) {
             mAddRssView.showEmptyRssUrls();
-        }else {
+        } else {
             mAddRssView.showRssUrls(rssUrls);
         }
     }
