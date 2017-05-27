@@ -1,15 +1,20 @@
 package com.rss.daniel.rss.addrss;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.rss.daniel.rss.Injection;
@@ -51,7 +56,7 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view ->
-                mAddRssPresenter.loadRssUrls()
+                showDialog()
         );
 
 /*        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -119,4 +124,31 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
                 R.layout.drawer_list_item, rssUrlList));
     }
 
+    public void showDialog(){
+        LayoutInflater li = LayoutInflater.from(RssListActivity.this);
+        View promptsView = li.inflate(R.layout.prompts, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                RssListActivity.this);
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                mAddRssPresenter.addRssUrl(userInput.getText().toString());
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
 }
