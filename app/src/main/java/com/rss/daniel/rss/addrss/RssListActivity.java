@@ -36,15 +36,17 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         setContentView(R.layout.activity_rsslist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        
+        mAddRssPresenter = new AddRssPresenter(
+                Injection.provideRssRepository(getApplicationContext()),
+                this,
+                Injection.provideSchedulerProvider());
+
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAddRssPresenter.addRssUrl("teste1");
-            }
-        });
+        fab.setOnClickListener(view -> mDrawerList.setAdapter(new ArrayAdapter<String>(RssListActivity.this,
+                R.layout.drawer_list_item, mPlanetTitles)));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -142,9 +144,9 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
     @Override
     public void showRssUrls(List<RssUrl> rssUrlList) {
 /*        mDrawerList.setAdapter(new ArrayAdapter<RssUrl>(this,
-                R.layout.drawer_list_item, rssUrlList));
-        Toast.makeText(this,"showRssUrls",Toast.LENGTH_LONG).show();*/
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, rssUrlList));*/
+        Toast.makeText(this,"showRssUrls",Toast.LENGTH_LONG).show();
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mPlanetTitles));
     }
 
