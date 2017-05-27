@@ -3,6 +3,7 @@ package com.rss.daniel.rss.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -33,5 +34,10 @@ public class RssUrl {
 
     public String getUrl() {
         return mUrl;
+    }
+    
+    @Override
+    public String toString() {
+        return "Url " + mUrl;
     }
 }

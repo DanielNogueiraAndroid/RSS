@@ -1,10 +1,7 @@
 package com.rss.daniel.rss.addrss;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,21 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.rss.daniel.rss.Injection;
 import com.rss.daniel.rss.R;
 import com.rss.daniel.rss.data.RssUrl;
 
-import java.net.URL;
 import java.util.List;
 
-public class RssListActivity extends AppCompatActivity implements AddRssContract.View,
-        NavigationView.OnNavigationItemSelectedListener {
+public class RssListActivity extends AppCompatActivity implements AddRssContract.View {
 
     AddRssContract.Presenter mAddRssPresenter;
     private ListView mDrawerList;
-    private String[] mPlanetTitles; // TODO  remove
+    private String[] empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +30,13 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         setContentView(R.layout.activity_rsslist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
+
         mAddRssPresenter = new AddRssPresenter(
                 Injection.provideRssRepository(getApplicationContext()),
                 this,
                 Injection.provideSchedulerProvider());
 
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> mDrawerList.setAdapter(new ArrayAdapter<String>(RssListActivity.this,
-                R.layout.drawer_list_item, mPlanetTitles)));
+        empty = getResources().getStringArray(R.array.empty_array);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -58,6 +48,11 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         toggle.syncState();
 
         mAddRssPresenter.onCreate();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(view ->
+                mAddRssPresenter.loadRssUrls()
+        );
 
 /*        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);*/
@@ -96,30 +91,6 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     @Override
     public void setPresenter(AddRssContract.Presenter addRssPresenter) {
@@ -138,16 +109,14 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
     @Override
     public void showEmptyRssUrls() {
-       // Toast.makeText(this,"showEmptyRssUrls",Toast.LENGTH_LONG).show();
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.drawer_list_item, empty));
     }
 
     @Override
     public void showRssUrls(List<RssUrl> rssUrlList) {
-/*        mDrawerList.setAdapter(new ArrayAdapter<RssUrl>(this,
-                R.layout.drawer_list_item, rssUrlList));*/
-        Toast.makeText(this,"showRssUrls",Toast.LENGTH_LONG).show();
-        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+        mDrawerList.setAdapter(new ArrayAdapter<RssUrl>(this,
+                R.layout.drawer_list_item, rssUrlList));
     }
 
 }
