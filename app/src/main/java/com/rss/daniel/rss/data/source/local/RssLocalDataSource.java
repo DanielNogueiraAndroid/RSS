@@ -64,7 +64,7 @@ public class RssLocalDataSource implements RssDataSource {
     public rx.Observable<List<RssUrl>> getRssUrls() {
         String[] projection = {
                 RssPersistenceContract.RssEntry.COLUMN_NAME_ENTRY_ID,
-                RssPersistenceContract.RssEntry.COLUMN_NAME_URL,
+                RssPersistenceContract.RssEntry.COLUMN_NAME_URL
 
         };
         String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), RssPersistenceContract.RssEntry.TABLE_NAME);
@@ -75,8 +75,8 @@ public class RssLocalDataSource implements RssDataSource {
     @NonNull
     private RssUrl getRssUrl(@NonNull Cursor c) {
         String itemId = c.getString(c.getColumnIndexOrThrow(RssPersistenceContract.RssEntry.COLUMN_NAME_ENTRY_ID));
-        String title = c.getString(c.getColumnIndexOrThrow(RssPersistenceContract.RssEntry.COLUMN_NAME_URL));
-        return new RssUrl(title,itemId);
+        String url = c.getString(c.getColumnIndexOrThrow(RssPersistenceContract.RssEntry.COLUMN_NAME_URL));
+        return new RssUrl(itemId, url);
     }
 
 }

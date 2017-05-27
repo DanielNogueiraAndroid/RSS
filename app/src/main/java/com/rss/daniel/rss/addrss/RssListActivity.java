@@ -1,8 +1,8 @@
 package com.rss.daniel.rss.addrss;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,10 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.rss.daniel.rss.Injection;
 import com.rss.daniel.rss.R;
 import com.rss.daniel.rss.data.RssUrl;
 
+import java.net.URL;
 import java.util.List;
 
 public class RssListActivity extends AppCompatActivity implements AddRssContract.View,
@@ -39,24 +42,25 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                mAddRssPresenter.addRssUrl("teste1");
             }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        mAddRssPresenter.onCreate();
+
 /*        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);*/
     }
+
 
     @Override
     public void onBackPressed() {
@@ -122,21 +126,26 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
     @Override
     public void setLoadingIndicator(boolean visible) {
-
+        // Toast.makeText(this,"setLoadingIndicator"+ visible,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showLoadingError() {
-
+        // Toast.makeText(this,"showLoadingError",Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showEmptyRssUrls() {
-
+       // Toast.makeText(this,"showEmptyRssUrls",Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void showRssUrls(List<RssUrl> rssUrls) {
-
+    public void showRssUrls(List<RssUrl> rssUrlList) {
+/*        mDrawerList.setAdapter(new ArrayAdapter<RssUrl>(this,
+                R.layout.drawer_list_item, rssUrlList));
+        Toast.makeText(this,"showRssUrls",Toast.LENGTH_LONG).show();*/
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mPlanetTitles));
     }
+
 }

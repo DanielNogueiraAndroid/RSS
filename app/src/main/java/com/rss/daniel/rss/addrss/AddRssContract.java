@@ -26,5 +26,7 @@ public interface AddRssContract {
         void addRssUrl(String url);
 
         void loadRssUrls();
+
+        void onCreate();
     }
 }
