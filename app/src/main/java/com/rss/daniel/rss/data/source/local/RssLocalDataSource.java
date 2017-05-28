@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssDataSource;
 import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.RSS;
 import com.rss.daniel.rss.util.BaseSchedulerProvider;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
@@ -74,7 +75,7 @@ public class RssLocalDataSource implements RssDataSource.Local {
     }
 
     @Override
-    public Observable<List<Channel.Item>> getRssList(RssUrl rssUrl) {
+    public Observable<RSS> getRssList(RssUrl rssUrl) {
         return null;
     }
 

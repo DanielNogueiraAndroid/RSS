@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.rss.daniel.rss.R;
 import com.rss.daniel.rss.http.model.Channel;
@@ -40,6 +41,7 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
         View root = inflater.inflate(R.layout.fragment_rsslist, container, false);
 
         ListView listView = (ListView) root.findViewById(R.id.rss_list);
+        listView.setAdapter(mListAdapter);
 
         // Set up progress indicator
         final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
@@ -51,6 +53,8 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
         );
         // Set the scrolling view in the custom SwipeRefreshLayout.
         swipeRefreshLayout.setScrollUpChild(listView);
+
+
 
         // TODO check if its working
         swipeRefreshLayout.setOnRefreshListener(() -> mAddRssPresenter.loadRssContent(true));
@@ -120,7 +124,7 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
         }
 
         @Override
-        public Object getItem(int position) {
+        public Channel.Item getItem(int position) {
             return items.get(position);
         }
 
@@ -136,7 +140,12 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
                 LayoutInflater inflater = LayoutInflater.from(parent.getContext());
                 rowView = inflater.inflate(R.layout.rss_item, parent, false);
             }
-            return null;
+            final Channel.Item item = getItem(position);
+
+            TextView titleTV = (TextView) rowView.findViewById(R.id.title);
+            titleTV.setText(item.title);
+
+            return rowView;
         }
 
         public void setList(List<Channel.Item> list) {

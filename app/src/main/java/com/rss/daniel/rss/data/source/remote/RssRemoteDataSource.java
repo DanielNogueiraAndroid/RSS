@@ -22,17 +22,8 @@ public class RssRemoteDataSource implements RssDataSource {
     static RssFeedService mXmlAdapterFor;
 
     @Override
-    public Observable<List<Channel.Item>> getRssList(RssUrl rssUrl) {
-        return mXmlAdapterFor.getFeed(rssUrl.getUrl())
-                .flatMap(new Func1<RSS, Observable<List<Channel.Item>>>() {
-                    @Override
-                    public Observable<List<Channel.Item>> call(RSS rss) {
-                        for (Channel.Item item : rss.getChannel().itemList) {
-                            item.fId = rssUrl.getId();
-                        }
-                        return Observable.from(rss.getChannel().itemList).toList();
-                    }
-                });
+    public Observable<RSS> getRssList(RssUrl rssUrl) {
+        return mXmlAdapterFor.getFeed(rssUrl.getUrl());
     }
 
     public static RssRemoteDataSource getInstance() {

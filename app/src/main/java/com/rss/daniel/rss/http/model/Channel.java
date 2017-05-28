@@ -66,17 +66,9 @@ public class Channel {
 
     @Root(name = "item", strict = false)
     public static class Item {
-        public Item(String title, String link, String description) {
-            this.title = title;
-            this.link = link;
-            this.description = description;
-        }
-
-        public String fId;//foreign
-        public String id;
 
         @Element(name = "title", required = true)
-        String title;//The title of the item.	Venice Film Festival Tries to Quit Sinking
+        public String title;//The title of the item.	Venice Film Festival Tries to Quit Sinking
         @Element(name = "link", required = true)
         String link;//The URL of the item.	http://www.nytimes.com/2002/09/07/movies/07FEST.html
         @Element(name = "description", required = true)

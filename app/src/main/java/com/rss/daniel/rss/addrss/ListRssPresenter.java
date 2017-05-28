@@ -1,13 +1,22 @@
 package com.rss.daniel.rss.addrss;
 
+import android.util.Log;
+
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssRepository;
+import com.rss.daniel.rss.http.ApiService;
+import com.rss.daniel.rss.http.RssFeedService;
 import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.RSS;
 import com.rss.daniel.rss.util.BaseSchedulerProvider;
 
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -40,15 +49,60 @@ public class ListRssPresenter implements ListRssContract.Presenter{
     public void loadRssContent(RssUrl rssUrl) {
         mCurrentRssUrl = rssUrl;
         mListRssView.setLoadingIndicator(true);
+        mSubscriptions.clear();
         Subscription subscription = mRssRepository
                 .getRssList(rssUrl)
-                .subscribeOn(mSchedulerProvider.computation())
+                .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
                 .doOnTerminate(()->
                         mListRssView.setLoadingIndicator(false))
+
+/*                .subscribe(new Subscriber<RSS>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("loadRss", "onCompleted() called");
+                    }
+                    @Override
+                    public void onError(final Throwable e) {
+                        Log.d("loadRss", "onError() called with: e = [" + e + "]");
+                    }
+                    @Override
+                    public void onNext(final RSS rss) {
+                        Log.d("loadRss", "onNext() called with: rss = [" + rss + "]");
+                    }
+                });*/
+
                 .subscribe(this::processRssList,
                         throwable -> mListRssView.showLoadingError());
         mSubscriptions.add(subscription);
+
+      /*  loadRss(rssUrl.getUrl());*/
+    }
+
+    private void loadRss(String baseURL) {
+
+        Subscription subscription = getRssObservable(baseURL)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<RSS>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("loadRss", "onCompleted() called");
+                    }
+                    @Override
+                    public void onError(final Throwable e) {
+                        Log.d("loadRss", "onError() called with: e = [" + e + "]");
+                    }
+                    @Override
+                    public void onNext(final RSS rss) {
+                        Log.d("loadRss", "onNext() called with: rss = [" + rss + "]");
+                    }
+                });
+    }
+
+    public Observable<RSS> getRssObservable(String url) {
+        RssFeedService xmlAdapterFor = ApiService.createXmlAdapterFor(RssFeedService.class);
+        return xmlAdapterFor.getFeed(url);
     }
 
     @Override
@@ -61,7 +115,10 @@ public class ListRssPresenter implements ListRssContract.Presenter{
         loadRssContent(mCurrentRssUrl);
     }
 
-    private void processRssList(List<Channel.Item> items) {
-        mListRssView.showRssList(items);
+    private void processRssList(RSS rss) {
+
+        mListRssView.showRssList(rss.getChannel().itemList);
+
+        Log.d("loadRss", "loadRssContent() called with: rss = [" + rss + "]");
     }
 }

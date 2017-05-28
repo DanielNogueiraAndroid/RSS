@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.local.RssLocalDataSource;
 import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.RSS;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,18 +70,7 @@ public class RssRepository implements RssDataSource,RssDataSource.Local {
     }
 
     @Override
-    public rx.Observable<List<Channel.Item>> getRssList(RssUrl rssUrl) {
-        if (mCachedRss == null) {
-            mCachedRss = new LinkedHashMap<>();
-        }
-        return mRssRemoteDataSource.getRssList(rssUrl)
-                .flatMap(new Func1<List<Channel.Item>, Observable<List<Channel.Item>>>() {
-                    @Override
-                    public Observable<List<Channel.Item>> call(List<Channel.Item> rssLists) {
-                        return Observable.from(rssLists)
-                                .toList()
-                                .doOnNext(rss -> mCachedRss.put(rss.get(0).fId, rss));
-                    }
-                });
+    public rx.Observable<RSS> getRssList(RssUrl rssUrl) {
+        return mRssRemoteDataSource.getRssList(rssUrl);
     }
 }

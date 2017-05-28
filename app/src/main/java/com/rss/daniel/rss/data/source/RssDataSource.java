@@ -2,6 +2,7 @@ package com.rss.daniel.rss.data.source;
 
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.RSS;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface RssDataSource {
 
-    rx.Observable<List<Channel.Item>> getRssList(RssUrl rssUrl);
+    rx.Observable<RSS> getRssList(RssUrl rssUrl);
 
     public interface Local extends RssDataSource{
 
