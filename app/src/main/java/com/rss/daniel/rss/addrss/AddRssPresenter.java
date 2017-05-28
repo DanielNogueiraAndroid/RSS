@@ -17,7 +17,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class AddRssPresenter implements AddRssContract.Presenter {
 
-    private final BaseSchedulerProvider mSchedulerProvider;
+    private BaseSchedulerProvider mSchedulerProvider;
     AddRssContract.View mAddRssView;
     RssRepository mRssRepository;
     @NonNull
@@ -39,10 +39,13 @@ public class AddRssPresenter implements AddRssContract.Presenter {
 
     @Override
     public void loadRssUrls() {
+        mAddRssView.setLoadingIndicator(true);
         Subscription subscription = mRssRepository
                 .getRssUrls()
                 .subscribeOn(mSchedulerProvider.computation())
                 .observeOn(mSchedulerProvider.ui())
+                .doOnTerminate(()->
+                        mAddRssView.setLoadingIndicator(false))
                 .subscribe(this::processRssUrl,
                         throwable -> mAddRssView.showLoadingError());
         mSubscriptions.add(subscription);

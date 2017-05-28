@@ -20,12 +20,14 @@ import android.widget.ListView;
 import com.rss.daniel.rss.Injection;
 import com.rss.daniel.rss.R;
 import com.rss.daniel.rss.data.RssUrl;
+import com.rss.daniel.rss.util.ActivityUtils;
 
 import java.util.List;
 
 public class RssListActivity extends AppCompatActivity implements AddRssContract.View {
 
     AddRssContract.Presenter mAddRssPresenter;
+    ListRssContract.Presenter mLisPresenter;
     private ListView mDrawerList;
     private String[] empty;
 
@@ -41,6 +43,23 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
                 this,
                 Injection.provideSchedulerProvider());
 
+        RssListFragment tasksFragment =
+                (RssListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (tasksFragment == null) {
+            // Create the fragment
+            tasksFragment = RssListFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), tasksFragment, R.id.contentFrame);
+        }
+
+        // Create the presenter
+        mLisPresenter = new ListRssPresenter(
+                Injection.provideRssRepository(getApplicationContext()),
+                tasksFragment,
+                Injection.provideSchedulerProvider());
+
+
+
         empty = getResources().getStringArray(R.array.empty_array);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -53,6 +72,7 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
         toggle.syncState();
 
         mAddRssPresenter.onCreate();
+        mLisPresenter.onCreate();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view ->

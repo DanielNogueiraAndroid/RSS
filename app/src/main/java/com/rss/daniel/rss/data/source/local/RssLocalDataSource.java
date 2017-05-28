@@ -10,19 +10,21 @@ import android.text.TextUtils;
 
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssDataSource;
+import com.rss.daniel.rss.http.model.Channel;
 import com.rss.daniel.rss.util.BaseSchedulerProvider;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.functions.Func1;
 
 /**
  * Created by danie on 25/05/2017.
  */
 
-public class RssLocalDataSource implements RssDataSource {
+public class RssLocalDataSource implements RssDataSource.Local {
 
     @Nullable
     private static RssLocalDataSource INSTANCE;
@@ -65,11 +67,15 @@ public class RssLocalDataSource implements RssDataSource {
         String[] projection = {
                 RssPersistenceContract.RssEntry.COLUMN_NAME_ENTRY_ID,
                 RssPersistenceContract.RssEntry.COLUMN_NAME_URL
-
         };
         String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), RssPersistenceContract.RssEntry.TABLE_NAME);
         return mDatabaseHelper.createQuery(RssPersistenceContract.RssEntry.TABLE_NAME, sql)
                 .mapToList(mRssMapperFunction);
+    }
+
+    @Override
+    public Observable<List<Channel.Item>> getRssList(RssUrl rssUrl) {
+        return null;
     }
 
     @NonNull

@@ -69,7 +69,6 @@ public class AddRssPresenterTest {
     public void loadRssUrlProgressOn() {
         mAddRssPresenter = new AddRssPresenter(mRssRepository, mAddRssView, mSchedulerProvider);
         when(mRssRepository.getRssUrls()).thenReturn(Observable.just(RSS_URLS));
-
         mAddRssPresenter.loadRssUrls();
         verify(mAddRssView).setLoadingIndicator(true);
     }
@@ -81,5 +80,4 @@ public class AddRssPresenterTest {
         mAddRssPresenter.loadRssUrls();
         verify(mAddRssView).showRssUrls(RSS_URLS);
     }
-
 }
