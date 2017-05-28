@@ -1,6 +1,6 @@
 package com.rss.daniel.rss.http;
 
-import com.rss.daniel.rss.http.model.RSS;
+import com.rss.daniel.rss.http.model.xml.RSS;
 
 import retrofit2.http.GET;
 import retrofit2.http.Url;

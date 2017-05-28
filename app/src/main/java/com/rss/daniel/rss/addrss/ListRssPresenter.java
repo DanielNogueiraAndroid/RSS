@@ -6,11 +6,9 @@ import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssRepository;
 import com.rss.daniel.rss.http.ApiService;
 import com.rss.daniel.rss.http.RssFeedService;
-import com.rss.daniel.rss.http.model.Channel;
-import com.rss.daniel.rss.http.model.RSS;
+import com.rss.daniel.rss.http.model.xml.Channel;
+import com.rss.daniel.rss.http.model.xml.RSS;
 import com.rss.daniel.rss.util.BaseSchedulerProvider;
-
-import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -42,7 +40,7 @@ public class ListRssPresenter implements ListRssContract.Presenter{
 
     @Override
     public void onCreate() {
-        loadRssContent(new RssUrl("http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml"));
+
     }
 
     @Override
@@ -113,6 +111,11 @@ public class ListRssPresenter implements ListRssContract.Presenter{
     @Override
     public void loadRssContent(boolean forceUpdate) {
         loadRssContent(mCurrentRssUrl);
+    }
+
+    @Override
+    public void onStart() {
+        loadRssContent(new RssUrl("http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml"));
     }
 
     private void processRssList(RSS rss) {

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by danie on 25/05/2017.
- */// TODO change all danie to Daniel
+ */
 
 public class AddRssPresenterTest {
 

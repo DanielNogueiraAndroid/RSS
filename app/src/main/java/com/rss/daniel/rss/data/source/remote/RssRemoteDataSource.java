@@ -4,13 +4,9 @@ import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssDataSource;
 import com.rss.daniel.rss.http.ApiService;
 import com.rss.daniel.rss.http.RssFeedService;
-import com.rss.daniel.rss.http.model.Channel;
-import com.rss.daniel.rss.http.model.RSS;
-
-import java.util.List;
+import com.rss.daniel.rss.http.model.xml.RSS;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by danie on 27/05/2017.

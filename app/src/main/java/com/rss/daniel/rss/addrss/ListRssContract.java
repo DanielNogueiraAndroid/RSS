@@ -1,7 +1,7 @@
 package com.rss.daniel.rss.addrss;
 
 import com.rss.daniel.rss.data.RssUrl;
-import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.xml.Channel;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface ListRssContract {
 
         void showLoadingError();
 
-        void showEmptyRssUrls();
+        void showEmptyRss();
 
         void showRssList(List<Channel.Item> rssContents);
     }
@@ -31,5 +31,7 @@ public interface ListRssContract {
         void openRssDetails(Channel.Item clickedRss);
 
         void loadRssContent(boolean forceUpdate);
+
+        void onStart();
     }
 }

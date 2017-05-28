@@ -1,8 +1,7 @@
 package com.rss.daniel.rss.data.source;
 
 import com.rss.daniel.rss.data.RssUrl;
-import com.rss.daniel.rss.http.model.Channel;
-import com.rss.daniel.rss.http.model.RSS;
+import com.rss.daniel.rss.http.model.xml.RSS;
 
 import java.util.List;
 

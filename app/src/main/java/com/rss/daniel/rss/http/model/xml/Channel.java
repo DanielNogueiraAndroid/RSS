@@ -1,4 +1,4 @@
-package com.rss.daniel.rss.http.model;
+package com.rss.daniel.rss.http.model.xml;
 
 /**
  * Created by https://gist.github.com/macsystems/01d7e80554efd344b1f9
@@ -25,7 +25,6 @@ public class Channel {
 
     @ElementList(name = "item", required = true, inline = true)
     public List<Item> itemList;
-
 
     @Element
     String title;
@@ -72,7 +71,7 @@ public class Channel {
         @Element(name = "link", required = true)
         String link;//The URL of the item.	http://www.nytimes.com/2002/09/07/movies/07FEST.html
         @Element(name = "description", required = true)
-        String description;//The item synopsis.	Some of the most heated chatter at the Venice Film Festival this week was about the way that the arrival of the stars at the Palazzo del Cinema was being staged.
+        public String description;//The item synopsis.	Some of the most heated chatter at the Venice Film Festival this week was about the way that the arrival of the stars at the Palazzo del Cinema was being staged.
         @Element(name = "author", required = false)
         String author;//Email address of the author of the item. More.	oprah@oxygen.net
         @Element(name = "category", required = false)
@@ -82,9 +81,9 @@ public class Channel {
         @Element(name = "enclosure", required = false)
         String enclosure;//	Describes a media object that is attached to the item. More.	<enclosure url="http://live.curry.com/mp3/celebritySCms.mp3" length="1069871" type="audio/mpeg"/>
         @Element(name = "guid", required = false)
-        String guid;//A string that uniquely identifies the item. More.	<guid isPermaLink="true">http://inessential.com/2002/09/01.php#a2</guid>
+        public String guid;//A string that uniquely identifies the item. More.	<guid isPermaLink="true">http://inessential.com/2002/09/01.php#a2</guid>
         @Element(name = "pubDate", required = false)
-        String pubDate;//	Indicates when the item was published. More.	Sun, 19 May 2002 15:21:36 GMT
+        public String pubDate;//	Indicates when the item was published. More.	Sun, 19 May 2002 15:21:36 GMT
         @Element(name = "source", required = false)
         String source;//	The RSS channel that the item came from. More.
 

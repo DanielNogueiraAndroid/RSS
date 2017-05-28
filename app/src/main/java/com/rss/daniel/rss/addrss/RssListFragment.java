@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rss.daniel.rss.R;
-import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.xml.Channel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,11 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
 
     private RssAdapter mListAdapter;
 
+    TextView textViewStatusList;
+
+    // Set up progress indicator
+     ScrollChildSwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,27 +44,27 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_rsslist, container, false);
-
+        textViewStatusList =( TextView) root.findViewById(R.id.text_list_status);
         ListView listView = (ListView) root.findViewById(R.id.rss_list);
         listView.setAdapter(mListAdapter);
 
-        // Set up progress indicator
-        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+        mSwipeRefreshLayout =
                 (ScrollChildSwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(
+        mSwipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
                 ContextCompat.getColor(getActivity(), R.color.colorAccent),
                 ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
         );
         // Set the scrolling view in the custom SwipeRefreshLayout.
-        swipeRefreshLayout.setScrollUpChild(listView);
-
-
-
-        // TODO check if its working
-        swipeRefreshLayout.setOnRefreshListener(() -> mAddRssPresenter.loadRssContent(true));
-
+        mSwipeRefreshLayout.setScrollUpChild(listView);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mAddRssPresenter.loadRssContent(true));
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAddRssPresenter.onStart();
     }
 
     @Override
@@ -69,21 +74,34 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
 
     @Override
     public void setLoadingIndicator(boolean visible) {
-
+        textViewStatusList.setVisibility(View.INVISIBLE);
+        if( visible ){
+            if(!mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        }else {
+            textViewStatusList.setVisibility(View.INVISIBLE);
+            if(mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }
     }
 
     @Override
     public void showLoadingError() {
-
+        textViewStatusList.setVisibility(View.VISIBLE);
+        textViewStatusList.setText("Sorry error try again");
     }
 
     @Override
-    public void showEmptyRssUrls() {
-
+    public void showEmptyRss() {
+        textViewStatusList.setVisibility(View.VISIBLE);
+        textViewStatusList.setText("Empty");
     }
 
     @Override
     public void showRssList(List<Channel.Item> rssContents) {
+        textViewStatusList.setVisibility(View.INVISIBLE);
         mListAdapter.replaceData(rssContents);
     }
 
@@ -142,8 +160,12 @@ public class RssListFragment extends Fragment implements ListRssContract.View {
             }
             final Channel.Item item = getItem(position);
 
-            TextView titleTV = (TextView) rowView.findViewById(R.id.title);
-            titleTV.setText(item.title);
+            TextView title = (TextView) rowView.findViewById(R.id.title);
+            TextView date = (TextView) rowView.findViewById(R.id.date);
+            TextView description = (TextView) rowView.findViewById(R.id.text_description);
+            date.setText(item.pubDate);
+            title.setText(item.title);
+            description.setText(item.title);
 
             return rowView;
         }

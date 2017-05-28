@@ -4,9 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.rss.daniel.rss.data.RssUrl;
-import com.rss.daniel.rss.data.source.local.RssLocalDataSource;
-import com.rss.daniel.rss.http.model.Channel;
-import com.rss.daniel.rss.http.model.RSS;
+import com.rss.daniel.rss.http.model.xml.Channel;
+import com.rss.daniel.rss.http.model.xml.RSS;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -22,6 +23,8 @@ import com.rss.daniel.rss.R;
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.util.ActivityUtils;
 
+import java.lang.reflect.Array;
+import java.nio.channels.Channel;
 import java.util.List;
 
 public class RssListActivity extends AppCompatActivity implements AddRssContract.View {
@@ -30,6 +33,9 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
     ListRssContract.Presenter mLisPresenter;
     private ListView mDrawerList;
     private String[] empty;
+    private ArrayAdapter<RssUrl> mAdapterRssUrls;
+    DrawerLayout mDrawer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +68,17 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
         empty = getResources().getStringArray(R.array.empty_array);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 
         mAddRssPresenter.onCreate();
-        mLisPresenter.onCreate();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view ->
@@ -86,9 +92,9 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+
+        if (mDrawer != null && mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -134,14 +140,22 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
     @Override
     public void showEmptyRssUrls() {
-        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, empty));
+
     }
 
     @Override
     public void showRssUrls(List<RssUrl> rssUrlList) {
-        mDrawerList.setAdapter(new ArrayAdapter<RssUrl>(this,
-                R.layout.drawer_list_item, rssUrlList));
+        if(mAdapterRssUrls == null){
+            mAdapterRssUrls =   new ArrayAdapter<RssUrl>(this,
+                    R.layout.drawer_list_item, rssUrlList);
+            mDrawerList.setAdapter(mAdapterRssUrls);
+            mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        }else{
+            mAdapterRssUrls.clear();
+            mAdapterRssUrls.addAll(rssUrlList);
+            mAdapterRssUrls.notifyDataSetChanged();
+        }
     }
 
     public void showDialog(){
@@ -154,6 +168,10 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
 
         final EditText userInput = (EditText) promptsView
                 .findViewById(R.id.editTextDialogUserInput);
+        userInput.setHint("Please typ the rss url");
+        //userInput.setText("http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml");
+        userInput.setText("http://feeds.bbci.co.uk/news/world/rss.xml");//TODO remove
+
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("OK",
@@ -170,5 +188,20 @@ public class RssListActivity extends AppCompatActivity implements AddRssContract
                         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        RssUrl rssUrl  =  mAdapterRssUrls.getItem(position);
+        mLisPresenter.loadRssContent(rssUrl);
+        if (mDrawer != null && mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
+        }
     }
 }

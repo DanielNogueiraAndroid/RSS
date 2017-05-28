@@ -1,11 +1,10 @@
 package com.rss.daniel.rss;
 
-import com.rss.daniel.rss.addrss.AddRssPresenter;
 import com.rss.daniel.rss.addrss.ListRssContract;
 import com.rss.daniel.rss.addrss.ListRssPresenter;
 import com.rss.daniel.rss.data.RssUrl;
 import com.rss.daniel.rss.data.source.RssRepository;
-import com.rss.daniel.rss.http.model.Channel;
+import com.rss.daniel.rss.http.model.xml.Channel;
 import com.rss.daniel.rss.util.BaseSchedulerProvider;
 import com.rss.daniel.rss.util.ImmediateSchedulerProvider;
 
@@ -27,19 +26,15 @@ import static org.mockito.Mockito.when;
 
 public class ListRssPresenterTest {
 
-    private static final java.util.List<Channel.Item> RSS_LIST = Arrays.asList(new Channel.Item("title 1","link1","description1"),new Channel.Item("title 2","link2","description2"));
+    private static final java.util.List<Channel.Item> RSS_LIST = Arrays.asList(new Channel.Item("title 1", "link1", "description1"), new Channel.Item("title 2", "link2", "description2"));
 
-    private static final String URL="http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml" ;
-
-    @Mock
-    private RssRepository mRssRepository;
-
-    @Mock
-    private ListRssPresenter mListRssPresenter;
-
+    private static final String URL = "http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml";
     @Mock
     public ListRssContract.View mListRssView;
-
+    @Mock
+    private RssRepository mRssRepository;
+    @Mock
+    private ListRssPresenter mListRssPresenter;
     private BaseSchedulerProvider mSchedulerProvider;
 
     @Before

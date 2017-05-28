@@ -1,4 +1,4 @@
-package com.rss.daniel.rss.http.model;
+package com.rss.daniel.rss.http.model.xml;
 
 
 /**
